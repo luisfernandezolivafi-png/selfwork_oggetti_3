@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selfwork Oggetti 3</title>
+</head>
+<body>
+
+    <script>
+        let bowling = {
+            players: [
+                { name: 'Livio', scores: [] },
+                { name: 'Paola', scores: [] },
+                { name: 'Filippo', scores: [] },
+                { name: 'Giuseppe', scores: [] }
+            ],
+
+            generaPunteggi: function (giocatore) {
+                for (let i = 0; i < 10; i++) {
+                    giocatore.scores.push(Math.floor(Math.random() * (10 - 1 + 1) + 1));
+                }
+            },
+
+            creaPunteggi: function () {
+                this.players.forEach(giocatore => this.generaPunteggi(giocatore));
+            },
+
+            calcolaPunteggiFinali: function () {
+                this.players.forEach(giocatore => {
+                    giocatore.finalScore = giocatore.scores.reduce((somma, punteggio) => somma + punteggio, 0);
+                    console.log(`${giocatore.name}: ${giocatore.finalScore} punti`);
+                });
+            },
+
+            aggiungiGiocatore: function (nome) {
+                let nuovoGiocatore = { name: nome, scores: [] };
+                this.generaPunteggi(nuovoGiocatore);
+                this.players.push(nuovoGiocatore);
+                console.log(`Giocatore ${nome} aggiunto`);
+            },
+
+            determinaVincitore: function () {
+                this.players.sort((a, b) => b.finalScore - a.finalScore);
+
+                let punteggioMassimo = this.players[0].finalScore;
+                let vincitori = this.players.filter(giocatore => giocatore.finalScore === punteggioMassimo);
+
+                if (vincitori.length === 1) {
+                    console.log(`Il vincitore è ${vincitori[0].name} con ${punteggioMassimo} punti`);
+                } else {
+                    let nomi = vincitori.map(giocatore => giocatore.name).join(", ");
+                    console.log(`Pareggio tra ${nomi} con ${punteggioMassimo} punti`);
+                }
+            },
+
+            stilaClassifica: function () {
+                this.players.sort((a, b) => b.finalScore - a.finalScore);
+
+                this.players.forEach((giocatore, indice) => {
+                    console.log(`${indice + 1}° ${giocatore.name} - ${giocatore.finalScore} punti`);
+                });
+            }
+        };
+
+        console.log("--- Punteggi casuali ---");
+        bowling.creaPunteggi();
+        bowling.players.forEach(giocatore => console.log(`${giocatore.name}: ${giocatore.scores.join(", ")}`));
+
+        console.log("--- Nuovo giocatore ---");
+        bowling.aggiungiGiocatore('Luis');
+        console.log(`Luis: ${bowling.players[bowling.players.length - 1].scores.join(", ")}`);
+
+        console.log("--- Punteggi finali ---");
+        bowling.calcolaPunteggiFinali();
+
+        console.log("--- Vincitore ---");
+        bowling.determinaVincitore();
+
+        console.log("--- Classifica finale ---");
+        bowling.stilaClassifica();
+    </script>
+</body>
+</html>
